@@ -87,7 +87,7 @@ if selected_stock:
 		st.plotly_chart(fig)
 		Portfolio = Portfolio(data)
 		Portfolio.Mean_Var_Matrix()
-		st.plotly_chart(Portfolio.display_simulated_ef_with_random(num_portfolios=10000))
+		st.plotly_chart(Portfolio.display_simulated_ef_with_random(num_portfolios=100000))
 
 
 	else:
