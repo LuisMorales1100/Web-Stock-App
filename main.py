@@ -7,8 +7,10 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.express as px
-import PortfolioOptimisation as PO
-import ForecastModel as FM
+#import PortfolioOptimisation as PO
+#import ForecastModel as FM
+from ForecastModel import Forecast_Model
+from PortfolioOptimisation import Portfolio
 
 
 st.title('Stock Portfolio App')
@@ -83,7 +85,7 @@ if selected_stock:
 		df1.fillna(0,inplace=True)
 		fig = px.imshow(df1,text_auto=True,color_continuous_scale="blues",title="Heat Map for Sharpe Ratio")
 		st.plotly_chart(fig)
-		Portfolio = PO.Portfolio(data)
+		Portfolio = Portfolio(data)
 		Portfolio.Mean_Var_Matrix()
 		st.plotly_chart(Portfolio.display_simulated_ef_with_random(num_portfolios=10000))
 
@@ -114,7 +116,7 @@ if selected_stock:
 		st.subheader("AI Forecast Modeling")
 		st.write("\n")
 		st.write("Stock:",selected_stock[0])
-		Model = FM.Forecast_Model(data)
+		Model = Forecast_Model(data)
 		Model.Model(sizeTrain_Proportion=0.85)
 		Days_Prediction = st.slider('Days of Prediction:',1,20)
 		Model.Prediction(Days_Prediction)
