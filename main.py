@@ -12,7 +12,7 @@ from PortfolioOptimisation import Portfolio
 from Strategies import Strategy
 import numpy as np
 
-#st.set_page_config(page_title="Stock App",layout='wide',page_icon="🧊")
+st.set_page_config(page_title="Stock App",layout='wide',page_icon="🧊")
 st.title('Stock Portfolio App')
 
 # Sidebar
