@@ -66,7 +66,7 @@ if selected_stock:
 		with col3:
 			st.write(" ")
 
-		st.subheader("Statics Visualization")
+		st.subheader("Stats Visualization")
 
 		# Histogram
 		fig = px.histogram(data["Adj Close"],title="Histogram of Close Price",labels={"value":"Adj Close $/Pesos"})
@@ -108,7 +108,7 @@ if selected_stock:
 		with col3:
 			st.write(" ")
 
-		st.subheader("Statics Visualization")
+		st.subheader("Stats Visualization")
 		# Histogram
 		fig = px.histogram(data["Adj Close"],title="Histogram of Close Price",labels={"value":"Adj Close $/Pesos"})
 		st.plotly_chart(fig)
@@ -122,5 +122,5 @@ if selected_stock:
 		Model.Prediction(Days_Prediction)
 		Model.Plot()
 		st.subheader("Model - Assumptions")
-		st.pyplot(Model.Assumptions())
+		st.plotly_chart(Model.Assumptions_Plot())
 

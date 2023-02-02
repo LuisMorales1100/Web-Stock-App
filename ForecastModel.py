@@ -1,8 +1,6 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import yfinance as yf
-import datetime
 import seaborn as sns
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.preprocessing import MinMaxScaler
@@ -12,7 +10,8 @@ from plotly import graph_objs as go
 import plotly.express as px
 import streamlit as st
 import scipy.stats as stats
-import pylab
+from plotly.subplots import make_subplots
+from statsmodels.graphics.gofplots import qqplot
 
 class Forecast_Model():
     def __init__(self,df):
@@ -117,23 +116,36 @@ class Forecast_Model():
         plt.suptitle("Assumptions for Model")
         plt.show()
         return fig
-
-        
     
+    def Assumptions_Plot(self):
+        self.resid = [(self.x_train[i][0] - self.train_predict[i]) for i in range(self.x_train.shape[0])]
+        fig = make_subplots(rows=2,cols=2,subplot_titles=("Residuals Histogram","Residuals Homocedasticity","Q-Q Plot","Residuals Independence"))
+        
+        # Normality
+        fig.add_trace(go.Histogram(x=self.resid,name="Residuals Histogram"),row=1,col=1)
+        self.qqplot_data = qqplot(np.array(self.resid), line='s').gca().lines
+        fig.add_trace(go.Scatter(x=self.qqplot_data[0].get_xdata(),y=self.qqplot_data[0].get_ydata(),name="Q-Q Plot",mode="markers"),row=2,col=1)
+        fig.add_trace(go.Scatter(x=self.qqplot_data[1].get_xdata(),y=self.qqplot_data[1].get_ydata(),mode="lines"),row=2,col=1)
+        
+        # Homocedasticity
+        fig.add_trace(go.Scatter(x=np.array(self.train_predict_inv.flatten().tolist()),y=self.resid,name="Homocedasticity",mode="markers"),row=1,col=2)
+        
+        #Independence
+        fig.add_trace(go.Scatter(x=np.arange(1,self.train_predict.shape[0]+1),y=self.resid,name="Independence",mode="lines"),row=2,col=2)
+        fig.add_hline(y=np.mean(self.resid),line_dash="dash",line_color="red",row=2,col=2)
 
-
-
-selected_stock = ["AAPL"]
-def load_data(ticker):
-    data = yf.download(ticker, "2015-01-01", "2023-01-01")
-    return data
-data = load_data(selected_stock)
-data
-
-model = Forecast_Model(data)
-model.Model(sizeTrain_Proportion=0.85)
-model.Prediction(Days_Prediction=5)
-model.Plot()
-model.new_df
-model.x_predict
-model.ts
+        fig.update_layout(width=1000,height=800,showlegend=False)
+        
+        fig["layout"]["xaxis"]["title"] = "Residuals"
+        fig["layout"]["yaxis"]["title"] = "Absolute Freq"
+        
+        fig["layout"]["xaxis2"]["title"] = "Predicted Values"
+        fig["layout"]["yaxis2"]["title"] = "Residuals"
+        
+        fig["layout"]["xaxis3"]["title"] = "Theorical Quantiles"
+        fig["layout"]["yaxis3"]["title"] = "Sample Quantiles"
+        
+        fig["layout"]["xaxis4"]["title"] = "Order"
+        fig["layout"]["yaxis4"]["title"] = "Residuals"
+        
+        return fig
