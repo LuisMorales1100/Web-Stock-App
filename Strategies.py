@@ -31,6 +31,13 @@ class Strategy():
         self.df["Buy_MA"] = Buy
         self.df["Sell_MA"] = Sell
         
+        self.Buy = [buy for buy in Buy if str(buy) != "nan"]
+        self.Sell = [sell for sell in Sell if str(sell) != "nan"]
+        
+        self.PnL_MA = pd.DataFrame([self.Buy[0:len(self.Sell)],self.Sell],index=["Buys","Sells"])
+        self.PnL_MA = self.PnL_MA.T
+        self.PnL_MA["PnL"] = (self.PnL_MA["Sells"] - self.PnL_MA["Buys"]) / self.PnL_MA["Buys"]
+        
         fig = go.Figure(data=[go.Candlestick(x=self.df.index,
                 open=self.df['Open'],
                 high=self.df['High'],
@@ -107,6 +114,13 @@ class Strategy():
         
         self.df["Buy_Fibonacci"] = buy_list
         self.df["Sell_Fibonacci"] = sell_list
+        
+        self.Buy = [buy for buy in buy_list if str(buy) != "nan"]
+        self.Sell = [sell for sell in sell_list if str(sell) != "nan"]
+        
+        self.PnL_Fib = pd.DataFrame([self.Buy[0:len(self.Sell)],self.Sell],index=["Buys","Sells"])
+        self.PnL_Fib = self.PnL_Fib.T
+        self.PnL_Fib["PnL"] = (self.PnL_Fib["Sells"] - self.PnL_Fib["Buys"]) / self.PnL_Fib["Buys"]
 
         fig = go.Figure(data=[go.Candlestick(x=self.df.index,
                         open=self.df['Open'],
@@ -161,6 +175,12 @@ class Strategy():
         self.df["Buy_MACD"] = Buy
         self.df["Sell_MACD"] = Sell
         
+        self.Buy = [buy for buy in Buy if str(buy) != "nan"]
+        self.Sell = [sell for sell in Sell if str(sell) != "nan"]
+        
+        self.PnL_MACD = pd.DataFrame([self.Buy[0:len(self.Sell)],self.Sell],index=["Buys","Sells"])
+        self.PnL_MACD = self.PnL_MACD.T
+        self.PnL_MACD["PnL"] = (self.PnL_MACD["Sells"] - self.PnL_MACD["Buys"]) / self.PnL_MACD["Buys"]
                 
         fig = make_subplots(rows=2,cols=1,subplot_titles=("","MACD"))
 
